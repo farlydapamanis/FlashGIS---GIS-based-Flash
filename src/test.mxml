@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2008 Google Inc. 
+ Licensed under the Apache License, Version 2.0:
+    http://www.apache.org/licenses/LICENSE-2.0
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:maps="com.google.maps.*" layout="absolute" width="100%" height="100%" viewSourceURL="srcview/index.html">
+  <mx:Panel title="Google Maps API for Flash Demo" width="100%" height="100%">
+  <maps:Map 
+    id="map" 
+    key="ABQIAAAA7QUChpcnvnmXxsjC7s1fCxQGj0PqsCtxKvarsoS-iqLdqZSKfxTd7Xf-2rEc_PC9o8IsJde80Wnj4g" 
+    mapevent_mapready="onMapReady(event)"
+    width="100%" height="100%"/>
+  <mx:HBox width="100%">
+  <mx:Text
+  	text="This is a demo of full screen. Click the button to see map fill your screen!"
+  	width="100%"/>
+  <mx:Image
+    id="fullscreenButton"
+    useHandCursor="true" 
+    buttonMode="true"
+    source="@Embed('img/fullscreen_1.png')"
+    click="toggleFullScreen()"/>
+  </mx:HBox>
+  </mx:Panel>
+  <mx:Script>
+    <![CDATA[
+    
+    [Embed(source="img/fullscreen_1.png")] private var fullscreenIcon:Class;
+    [Embed(source="img/fullscreen_2.png")] private var fullscreen2Icon:Class;
+
+    private function onMapReady(event:Event):void {
+      systemManager.stage.addEventListener(FullScreenEvent.FULL_SCREEN, fullScreenHandler);
+    }
+    
+    
+    private function fullScreenHandler(evt:FullScreenEvent):void {
+      if (evt.fullScreen) {
+        fullscreenButton.source = new fullscreen2Icon();
+      } else {
+        fullscreenButton.source = new fullscreenIcon();
+      }
+    }
+
+    private function toggleFullScreen():void {
+      try {
+        switch (systemManager.stage.displayState) {
+          case StageDisplayState.FULL_SCREEN:
+            systemManager.stage.displayState = StageDisplayState.NORMAL;
+            break;
+          default:
+            systemManager.stage.displayState = StageDisplayState.FULL_SCREEN;
+            break;
+        }
+      } catch (err:SecurityError) {
+      // ignore
+      }
+    }
+   
+    ]]>
+  </mx:Script>
+</mx:Application>

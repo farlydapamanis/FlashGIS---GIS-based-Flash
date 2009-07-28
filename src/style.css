@@ -1,0 +1,230 @@
+/* CSS file */
+Application
+{
+	backgroundGradientAlphas: 1.0, 1.0;
+	backgroundGradientColors: #333333, #333333;
+}
+
+ApplicationControlBar
+{
+	borderSkin: Embed(source="kingnarestyle.swf", symbol="ApplicationControlBar_BackgroundSkin");
+}
+
+Alert
+{
+	backgroundAlpha:1;
+	borderAlpha:1;
+	backgroundColor:#333333;
+	borderColor:#555555;
+	buttonStyleName: Button;
+	paddingBottom: 8;
+}
+
+Button
+{
+	color: #AAAAAA;
+	textRollOverColor: #FFFFFF;
+	textSelectedColor:#FFFFFF;
+	disabledColor:#5A5A5A;
+	fontWeight:normal;
+	
+	upSkin: Embed(source="kingnarestyle.swf", symbol="Button_upSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="Button_overSkin");
+	downSkin: Embed(source="kingnarestyle.swf", symbol="Button_downSkin");
+	disabledSkin: Embed(source="kingnarestyle.swf", symbol="Button_disabledSkin");
+	
+	selectedUpSkin: Embed(source='kingnarestyle.swf', symbol='Button_selectedUpSkin');
+	selectedOverSkin: Embed(source='kingnarestyle.swf', symbol='Button_selectedOverSkin');
+	selectedDownSkin: Embed(source='kingnarestyle.swf', symbol='Button_selectedDownSkin');
+	selectedDisabledSkin: Embed(source='kingnarestyle.swf', symbol='Button_selectedDisabledSkin');
+}
+
+Panel
+{
+	color: #DDDDDD;
+	backgroundColor: #333333;
+	cornerRadius: 2;
+	roundedBottomCorners: true;
+	shadowDistance: 1;
+	dropShadowEnabled: true;
+	
+	borderColor: #555555;
+	borderAlpha: 0.9;
+	borderStyle: solid;
+	borderThickness:2;
+	
+	headerHeight: 28;
+	titleBackgroundSkin: Embed(source="kingnarestyle.swf", symbol="Panel_titleBackgroundSkin");
+	backgroundImage: Embed(source="kingnarestyle.swf", symbol="Panel_backgroundImage");
+	/* Panel_SpBackgroundImage */
+	backgroundSize: "100%";
+	titleStyleName: "windowTitle";
+	controlBarStyleName: ControlBar;
+	borderThicknessRight: 0;
+	borderThicknessLeft: 0;
+	borderThicknessBottom: 0;
+	borderThicknessTop: -1;
+}
+
+  		/*Panel {
+		   borderThicknessLeft: 0;
+		   borderThicknessTop: 0;
+		   borderThicknessBottom: 0;
+		   borderThicknessRight: 0;
+		   cornerRadius: 10;
+		   headerColors: #000000, #999999;
+		}*/
+
+ComboBox
+{	
+/* using symbol */
+/* 	upSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_upSkin");
+	overSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_overSkin");	
+	downSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_downSkin");
+	disabledSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_disabledSkin");
+
+	editableUpSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_editableUpSkin"); 
+	editableOverSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_editableOverSkin");
+	editableDownSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_editableDownSkin");
+	editableDisabledSkin: Embed(source="kingnarestyle.swf", symbol="ComboBoxArrow_editableDisabledSkin"); */
+	
+/* using ClassReference */
+	upSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	overSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	downSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	disabledSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+		
+	editableUpSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	editableOverSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	editableDownSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	editableDisabledSkin: ClassReference("com.kingnare.skins.ComboBox.ComboBoxSkin");
+	
+	color: #CCCCCC;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#ffffff;
+	textDisabledColor: #1e1e1e;
+	cornerRadius: 0;
+	arrowButtonWidth: 18;
+	borderThickness: 0;
+	fontWeight: normal;
+	dropdownStyleName: dropDown;
+}
+
+.dropDown {
+	branchIcon: Embed(source="kingnarestyle.swf",symbol="Menu_branchIcon");
+	branchDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_branchDisabledIcon");
+	checkIcon: Embed(source="kingnarestyle.swf",symbol="Menu_checkIcon");
+	checkDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_checkDisabledIcon");
+	radioIcon: Embed(source="kingnarestyle.swf",symbol="Menu_radioIcon");
+	radioDisabledIcon: Embed(source="kingnarestyle.swf",symbol="Menu_radioDisabledIcon");
+	separatorSkin: Embed(source="kingnarestyle.swf",symbol="Menu_separatorSkin");
+	backgroundImage: Embed(source="kingnarestyle.swf", symbol="BackgroundSkin"); 
+	backgroundSize: "100%";  
+	backgroundAlpha: 1.0;
+	borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #000000;
+	cornerRadius:0;
+	color: #CCCCCC;
+	textRollOverColor: #ffffff;
+	textSelectedColor:#dddddd;
+	rollOverColor: #333333;
+	selectionColor: #444444;
+}
+
+ControlBar
+{
+	borderSkin: Embed(source="kingnarestyle.swf", symbol="Control_borderSkin");
+	/* paddingTop: 0;
+	paddingRight: 3;
+	paddingLeft: 3;
+	paddingBottom: 0;
+	horizontalGap: 5; */
+}
+
+Label
+{
+	color: #FFFFFF;
+	disabledColor: #BBBBBB;
+}
+
+LinkButton
+{
+	rollOverColor: #222222;
+	selectionColor: #000000;
+	focusAlpha: 0.1;
+	cornerRadius: 0;
+}
+
+.PanelWithControlBar
+{
+	backgroundImage: Embed(source="kingnarestyle.swf", symbol="Panel_SpBackgroundImage");
+}
+
+TextInput
+{
+	backgroundAlpha: 1.0;
+	borderColor: #B7BABC;
+	color: #FFFFFF;
+	borderSkin: Embed(source="kingnarestyle.swf", symbol="TextInput_borderSkin");
+	borderStyle: none;
+	paddingTop: 2;
+	
+}
+
+.textBorder
+{
+	borderSkin: Embed(source="kingnarestyle.swf", symbol="TextInput_borderSkin"); 
+}
+/*
+ToggleButtonBar 
+{ 
+        buttonStyleName: "middleButtonBarButton"; 
+        firstButtonStyleName: "firstButtonBarButton";
+        lastButtonStyleName: "lastButtonBarButton";
+}
+.firstButtonBarButton 
+{ 
+        disabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstDisabledSkin"); 
+        downSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstDownSkin"); 
+        overSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstOverSkin"); 
+        selectedDisabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstSelectedDisabledSkin"); 
+        selectedDownSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstSelectedUpSkin"); 
+        selectedOverSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstSelectedUpSkin");
+        selectedUpSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstSelectedUpSkin");
+        upSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_firstUpSkin");
+        color: #aaaaaa;
+		textRollOverColor: #ffffff;
+		textSelectedColor: #ffffff;
+		disabledColor:#444444;
+}
+.middleButtonBarButton 
+{ 
+        disabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonDisabledSkin"); 
+        downSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonDownSkin"); 
+        overSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonOverSkin"); 
+        selectedDisabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonSelectedDisabledSkin"); 
+        selectedDownSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonSelectedUpSkin"); 
+        selectedOverSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonSelectedUpSkin");
+        selectedUpSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonSelectedUpSkin");
+        upSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_buttonUpSkin");
+        color: #aaaaaa;
+		textRollOverColor: #ffffff;
+		textSelectedColor: #ffffff;
+		disabledColor:#444444;
+}
+.lastButtonBarButton 
+{ 
+        disabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastDisabledSkin"); 
+        downSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastDownSkin"); 
+        overSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastOverSkin"); 
+        selectedDisabledSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastSelectedDisabledSkin"); 
+        selectedDownSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastSelectedUpSkin"); 
+        selectedOverSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastSelectedUpSkin");
+        selectedUpSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastSelectedUpSkin");
+        upSkin: Embed(source="kingnarestyle.swf", symbol="ButtonBar_lastUpSkin");
+        color: #aaaaaa;
+		textRollOverColor: #ffffff;
+		textSelectedColor: #ffffff;
+		disabledColor:#444444; 
+}*/

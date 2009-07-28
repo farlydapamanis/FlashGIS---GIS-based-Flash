@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+    layout="absolute" 
+    width="100%" height="100%" 
+    viewSourceURL="srcview/index.html"
+    backgroundColor="#333333">
+  
+  	<mx:Style source="style.css"/>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.Zoom;
+			import com.google.maps.controls.ZoomControlOptions;
+			import com.google.maps.LatLngBounds;
+			// GOOGLE MAP API LIBRARY
+      		import com.google.maps.MapOptions;
+      		import com.google.maps.MapTypeOptions;
+      		import com.google.maps.InfoWindowOptions;
+		  	import com.google.maps.LatLng;
+		  	import com.google.maps.Map;
+		  	import com.google.maps.MapEvent;
+		  	import com.google.maps.MapType;
+		  	import com.google.maps.MapMouseEvent;
+		  	import com.google.maps.MapMoveEvent;
+		  	import com.google.maps.services.ClientGeocoder;
+      		import com.google.maps.services.GeocodingEvent;
+      		import com.google.maps.overlays.Marker;
+      		import com.google.maps.overlays.MarkerOptions;
+      		import com.google.maps.controls.ZoomControl;
+      		import com.google.maps.controls.ControlPosition;
+      		import com.google.maps.controls.MapTypeControl;
+			import com.google.maps.interfaces.IMapType;
+      		// FLEX LIBRARY
+      		import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+      		import mx.controls.Alert;
+      		import mx.containers.TitleWindow;
+      		import mx.managers.PopUpManager;
+      		import mx.utils.ObjectUtil;
+      		import mx.controls.Alert;
+      		import mx.events.ItemClickEvent;
+      		import mx.managers.SystemManager;
+      		import flash.display.StageDisplayState;
+		 
+		  	private var map:Map;
+		  	private var marker:Marker;
+ 	  		
+		    [Embed(source="img/fullscreen_1.png")] private var fullscreenIcon:Class;
+		    [Embed(source="img/fullscreen_2.png")] private var fullscreen2Icon:Class; 
+		    
+		  	public function onContinerInitialize( event:Event ):void 
+		  	{
+			    map = new Map();
+			    map.key = "ABQIAAAAygn08KtrPHRID57cCzRochT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQgujvgsY9T-1xHRx_tQQgNFe2vEA";
+			    map.addEventListener( MapEvent.MAP_READY,onMapReady);
+			    mapContainer.addChild(map);
+		  	}
+		  			
+			public function onContainerResize( event:Event ):void 
+			{
+			    map.setSize( new Point( mapContainer.width, mapContainer.height ) );
+			}
+		
+		 	private function onMapReady( e:MapEvent ):void 
+		 	{
+		 		mapType.dataProvider = [ MapType.PHYSICAL_MAP_TYPE, MapType.NORMAL_MAP_TYPE, MapType.SATELLITE_MAP_TYPE, MapType.HYBRID_MAP_TYPE ];
+			    mapType.selectedIndex = 0;
+			    
+			    map.addControl(new ZoomControl());
+			    
+			    map.enableScrollWheelZoom();
+			    map.enableContinuousZoom();
+			    
+			    map.setCenter(new LatLng (1.4740281636142172, 124.83764934387207), 14, mapType.dataProvider[0] );
+			    
+			    //map.addControl(new MapTypeControl());
+			    // Function for Right Click Menu
+			    addContextMenu();
+			    // Http Service Loader for XML reader
+			    service.send();
+			    // FullScreen Loader
+			    systemManager.stage.addEventListener(FullScreenEvent.FULL_SCREEN, fullScreenHandler);	
+			    //3D
+			    
+			    		    
+		  	}
+		  	// [BEGIN] CHANGE MAP TYPE (TERRAIN, SATELLITE, MAP, HYBRID)
+		  	private function onChangeMapType() : void
+		  	{
+		  		if ( mapType.selectedItem )
+		  			map.setMapType( IMapType( mapType.selectedItem ) );
+		  	}
+		  	
+		  	private function labelFunction( o : Object ) : String
+		  	{
+		  		if ( o is IMapType )
+		  			return IMapType( o ).getName();
+		  		return "";
+		  	}
+		  	// [END]
+		  	// [BEGIN]SEARCH GEODATA AND LAT-LONG
+      		private function processForm(event:Event):void {
+        		if (lat.text != "") setMarker(event);
+        		else doGeocode(event);
+      		}
+
+		    private function setMarker(event:Event):void {
+        	  var latlng:LatLng = new LatLng(Number(lat.text), Number(lng.text)); 
+        	  map.setCenter(latlng);
+        	  if (marker) marker.setLatLng(latlng);
+        		else createMarker(latlng);
+      		}
+
+      		private function createMarker(point:LatLng):void {
+        	  marker = new Marker(point, new MarkerOptions({draggable: true}));
+        	  
+        	  marker.addEventListener(MapMouseEvent.CLICK, function (event:MapMouseEvent):void {
+                var markerContent:String = marker.getLatLng().toString();
+                marker.openInfoWindow(new InfoWindowOptions({contentHTML: markerContent}));
+              });
+              
+              marker.addEventListener(MapMouseEvent.DRAG_END, function(event:MapMouseEvent):void {
+               var markerContent:String = marker.getLatLng().toString();
+               marker.openInfoWindow(new InfoWindowOptions({contentHTML: markerContent}));
+              });
+              
+              map.addOverlay(marker);
+              
+              marker.addEventListener(MapEvent.INFOWINDOW_CLOSED,function (e:Event):void {
+               	map.removeOverlay(marker);
+              }); 
+         	}
+  
+      		private function doGeocode(event:Event):void {
+        		// Geocoding example
+        		var geocoder:ClientGeocoder = new ClientGeocoder();
+        		
+        		geocoder.addEventListener(
+          			GeocodingEvent.GEOCODING_SUCCESS,
+          			function(event:GeocodingEvent):void {
+          				var placemarks:Array = event.response.placemarks;
+          				if (placemarks.length > 0) {
+            				map.setCenter(placemarks[0].point);
+            				createMarker(placemarks[0].point);
+          				}
+        		});
+        		
+        		geocoder.addEventListener(
+          			GeocodingEvent.GEOCODING_FAILURE,
+          			function(event:GeocodingEvent):void {
+            			Alert.show("Geocoding failed");
+            			trace(event);
+            			trace(event.status);
+          		});
+        		
+        		geocoder.geocode(address.text);
+      		}
+      		// [END]SEARCH GEODATA AND LAT-LONG
+	  		// [BEGIN]LOADING DATA FROM XML
+	  		private function onMapResult( e:ResultEvent ):void 
+	  		{
+				var list:ArrayCollection = e.result.markers.loc;
+				for(var i:int=0; i<list.length; i++)
+				{
+					var name:String = list[i].name;
+					var address:String = list[i].address;
+					var type:String = list[i].type;
+					var latlng:LatLng = new LatLng(list[i].lat, list[i].lng);
+					createMarkerdb(latlng, name, address, type);
+				}
+	  		}
+	  
+      		public function createMarkerdb(latlng:LatLng, name:String, address:String, type:String):void {
+      			var markerOptions:MarkerOptions = new MarkerOptions({});
+		      	var m:Marker = new Marker(latlng, markerOptions);
+        		var html:String = "<b>" + name + "</b> <br/>" + address;
+        		
+        		m.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
+          			m.openInfoWindow(new InfoWindowOptions({contentHTML:html}));
+        		});
+        		
+        		map.addOverlay(m);
+     		}
+     		// [END]LOADING DATA FROM XML
+        	private function addContextMenu():void {
+           		var menu:ContextMenu = new ContextMenu();
+            	var latlng:LatLng;
+            	menu.addEventListener(ContextMenuEvent.MENU_SELECT, function(e:ContextMenuEvent):void {
+               		latlng = map.fromViewportToLatLng(new Point(e.mouseTarget.mouseX, e.mouseTarget.mouseY));
+            	});
+            
+            	var menuItem:ContextMenuItem = new ContextMenuItem('Add Marker');
+            		menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, function(e:ContextMenuEvent):void {
+						onClickAdd(latlng);
+            		});
+            	menu.customItems.push(menuItem);
+            	menu.hideBuiltInItems();
+            	this.map.contextMenu = menu;
+        	} 
+       		// [BEGIN]ADDING DATA TO MySQL
+       		private function onClickAdd(latlng:LatLng):void
+       		{
+          		// Create a marker with an info window whose body is customized
+            	var addm:Marker = new Marker(latlng, 
+            		new MarkerOptions({draggable: true}));
+            	var options2:InfoWindowOptions = new InfoWindowOptions({
+                	customContent: new InfoWindowTabbedComponent(addm),
+                	customOffset: new Point(0, 10),
+                	width: 300,
+                	height: 150,
+                	drawDefaultFrame: true
+            	});
+            	
+            	addm.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
+                	addm.openInfoWindow(options2); 
+            	});
+            	
+            	this.map.addOverlay(addm);
+            	addm.openInfoWindow(options2); 
+            	
+            	addm.addEventListener(MapEvent.INFOWINDOW_CLOSED,function (e:Event):void {
+                	map.removeOverlay(addm);
+                }); 
+       		}
+       		// [END]ADDING DATA TO MySQL
+  			// [BEGIN] MENU CLICK
+  			private function menuClick(event:ItemClickEvent):void{
+  				if(event.index == 2){
+  					navigateToURL(new URLRequest('http://bit.ly/zwFaN'), 'Comment');
+  				}
+  				/*if(event.index == 3){
+  					navigateToURL(new URLRequest('http://manado-info.com/flashgis'), 'Miror Indonesia');
+  				}
+  				if(event.index == 4){
+  					navigateToURL(new URLRequest('http://sulutnews.net/flashgis'), 'Miror US');
+  				}*/
+  			}
+  			// [END] MENU CLICK
+  			// [BEGIN] RESET MAP
+  			private function resetMap (e:Event):void{
+  				map.setCenter(new LatLng (1.4740281636142172, 124.83764934387207), 14, mapType.dataProvider[0] );
+  			}
+  			// [END] RESET MAP
+  			// [BEGIN] FULLSCREEN HANDLER
+		    private function fullScreenHandler(evt:FullScreenEvent):void {
+		      if (evt.fullScreen) {
+		        fullscreenButton.source = new fullscreen2Icon();
+		      } else {
+		        fullscreenButton.source = new fullscreenIcon();
+		      }
+		    }
+		    
+		    private function toggleFullScreen():void {
+		      try {
+		        switch (systemManager.stage.displayState) {
+		          case StageDisplayState.FULL_SCREEN:
+		            systemManager.stage.displayState = StageDisplayState.NORMAL;
+		            break;
+		          default:
+		            systemManager.stage.displayState = StageDisplayState.FULL_SCREEN;
+		            break;
+		        }
+		      } catch (err:SecurityError) {
+		      // ignore
+		      }
+		    }
+		    // [END] FULLSCREEN HANDLER
+		]]>
+	</mx:Script>
+	<mx:HTTPService id="service" url="genxml.php" result="onMapResult(event)"/>
+<mx:VBox height="100%" width="100%">
+	    <mx:ApplicationControlBar width="100%">
+	    <mx:Label text="Welcome to FlashGIS Prototype [interface ver.alpha]"/>
+	    <mx:Spacer width="100%"/>
+	    <mx:LinkBar itemClick="menuClick(event);">
+	    	<mx:dataProvider>
+	    		<mx:String>Register</mx:String>
+	    		<mx:String>Login</mx:String>
+	    		<mx:String>Facebook</mx:String>
+	    	</mx:dataProvider>
+	    </mx:LinkBar>
+	    </mx:ApplicationControlBar>
+		 <mx:UIComponent id="mapContainer"
+	        initialize="onContinerInitialize(event);" 
+	        resize="onContainerResize(event)" 
+	        width="100%" height="100%" x="0" y="0"/> 
+	  <mx:ControlBar width="100%" bottom="0">
+	  <mx:VBox width="100%" height="100%">
+	  	<mx:HBox width="100%">
+	  		<mx:VBox>
+	  		  <mx:HBox>
+	  			<mx:Label text="Enter Address:"/>
+  				<mx:TextInput id="address"
+     				text="Manado" width="120"
+     				enter="processForm(event);" />
+     			<mx:Label text="or lat/lng: "/>
+  				<mx:TextInput id="lat" text="" width="50" />
+  				<mx:TextInput id="lng" text="" width="50"
+  					enter="processForm(event);" />
+     			<mx:Button id="submitButton" label="Go!"
+     				click="processForm(event);" />
+	  		  </mx:HBox>  		  
+	  		</mx:VBox>
+	  		<mx:Spacer width="100%"/>
+			<mx:VBox>
+	  		  <mx:HBox>
+	  			<mx:Label text="Map Type"/>
+	  			<mx:ComboBox id="mapType" 
+	  				labelField="label" 
+	  				change="onChangeMapType()" 
+	  				labelFunction="labelFunction" />
+	  		  <mx:Button id="reset" label="Reset Map"
+     				click="resetMap(event);" />	
+			  <mx:Image
+			    id="fullscreenButton"
+			    useHandCursor="true" 
+			    buttonMode="true"
+			    source="@Embed('img/fullscreen_1.png')"
+			    click="toggleFullScreen()"/>	
+	  		  </mx:HBox>
+			</mx:VBox>
+		</mx:HBox>
+	  <mx:Spacer height="100%"/>
+
+	  </mx:VBox>
+	  </mx:ControlBar>
+</mx:VBox>
+</mx:Application>

@@ -1,0 +1,8 @@
+
+<?xml version="1.0"?>
+<cross-domain-policy>
+	<allow-access-from domain="www.manado-info.com" />
+	<allow-access-from domain="manado-info.com" />
+	<allow-access-from domain="sulutnews.net" />
+	<allow-access-from domain="www.sulutnews.net" />
+</cross-domain-policy>
